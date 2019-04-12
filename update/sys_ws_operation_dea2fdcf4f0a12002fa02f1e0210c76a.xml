@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json,application/xml,text/xml</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>POST</http_method>
+        <name>Add comment</name>
+        <operation_script><![CDATA[(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+	var taskID = request.pathParams.task_id;
+	var comments = request.body.data.comment;
+	try {
+		validateInput(comments);
+	} catch(ex) {
+		gs.info("Exception caught");
+		response.setError(new sn_ws_err.BadRequestError("Valid inputs not present in request. " + ex));
+		return;
+	}
+	
+	// Get Glide record
+	var gr = new GlideRecordSecure('task');
+	gr.get(taskID);
+
+	if(gr.isValid()) {
+		gr.work_notes=request.body.data.comment;
+		
+		if(gr.update()) {
+			response.setStatus(201);
+			response.setContentType("application/json");
+			// Use stream writer to send custom response
+			response.getStreamWriter().writeString('{"data":"Successfully inserted"}');
+		} else {
+			// Cant update comments. Send error response
+			var svcError = new sn_ws_err.ServiceError();
+			svcError.setStatus(400);
+			svcError.setMessage("Error updating comments");
+			svcError.setDetail("May be ACL restricted updating comments");
+			response.setError(svcError);
+		}
+	} else {
+		response.setError(new sn_ws_err.NotFoundError("Task with Record Id not found"));
+	}
+
+	function validateInput(comments){
+		if(!comments) {
+			throw "Comments data not present. Request body must be like {'comments':'My comments here'}";
+		}
+	}
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_snc_my_work/v1/tracker/task/{task_id}/comment</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/task/{task_id}/comment</relative_path>
+        <request_example>{"comment":"Here is my comment text"}</request_example>
+        <requires_acl_authorization>false</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>false</requires_snc_internal_role>
+        <short_description>Add comments to tasks</short_description>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2016-03-13 15:49:06</sys_created_on>
+        <sys_id>dea2fdcf4f0a12002fa02f1e0210c76a</sys_id>
+        <sys_mod_count>20</sys_mod_count>
+        <sys_name>Add comment</sys_name>
+        <sys_package display_value="My Work" source="x_snc_my_work">11e9a50b4f0a12002fa02f1e0210c737</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="My Work">11e9a50b4f0a12002fa02f1e0210c737</sys_scope>
+        <sys_update_name>sys_ws_operation_dea2fdcf4f0a12002fa02f1e0210c76a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2016-03-14 18:57:36</sys_updated_on>
+        <web_service_definition display_value="Task tracker API">fc1aa14b4f0a12002fa02f1e0210c72a</web_service_definition>
+        <web_service_version display_value="v1">b7cc25cb4f0a12002fa02f1e0210c7a6</web_service_version>
+    </sys_ws_operation>
+</record_update>

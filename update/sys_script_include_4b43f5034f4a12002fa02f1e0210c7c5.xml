@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_snc_my_work.TaskRetriever</api_name>
+        <client_callable>false</client_callable>
+        <description>Reusable logic to retrieve tasks</description>
+        <name>TaskRetriever</name>
+        <script><![CDATA[var TaskRetriever = Class.create();
+TaskRetriever.prototype = {
+	initialize: function() {
+	},
+	getTaskCount:function(userId, tableName){
+		var gr = new GlideRecordSecure(tableName);
+		gr.addQuery('assigned_to', userId);
+		gr.addQuery('active', true);
+		gr.query();
+		return gr.getRowCount();
+	},
+	getTaskRecordsForUser:function(userId){
+		var gr = new GlideRecordSecure('task');
+		gr.addQuery('assigned_to', userId);
+		gr.addQuery('active', true);
+		gr.orderBy('sys_created_on');
+		gr.query();
+		return gr;
+	},
+	getTaskRecordsForTeam:function(teamName){
+		var rec = new GlideRecord("sys_user_group");
+		rec.addQuery("name",teamName);
+		rec.query();
+		rec.next();
+		var grpId = rec.getValue("sys_id");
+		var gr = new GlideRecordSecure('task');
+		gr.addQuery('assignment_group', grpId);
+		gr.addQuery('active', true);
+		gr.orderBy('sys_created_on');
+		gr.query();
+		return gr;
+	},
+	populateResponse:function(taskRecs){
+		var resp={};
+		while (taskRecs.next()) {
+			var clazz = taskRecs.getDisplayValue('sys_class_name');
+			if (!(clazz in resp))
+				resp[clazz] = [];
+			
+			var sys_id = taskRecs.getValue('sys_id');
+			resp[clazz].push({
+				number: taskRecs.getValue('number'),
+				short_desc: taskRecs.getValue('short_description'),
+				sys_id: sys_id,
+				link: gs.getProperty('glide.servlet.uri') + 'api/now/v2/table/' + clazz + '/' + sys_id,
+				snowui: gs.getProperty('glide.servlet.uri') + clazz + '.do?sys_id=' + sys_id,
+				created: taskRecs.getValue('sys_created_on')
+			});
+		}
+		return resp;
+	},
+	type: 'TaskRetriever'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2016-03-13 15:53:00</sys_created_on>
+        <sys_id>4b43f5034f4a12002fa02f1e0210c7c5</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>TaskRetriever</sys_name>
+        <sys_package display_value="My Work" source="x_snc_my_work">11e9a50b4f0a12002fa02f1e0210c737</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="My Work">11e9a50b4f0a12002fa02f1e0210c737</sys_scope>
+        <sys_update_name>sys_script_include_4b43f5034f4a12002fa02f1e0210c7c5</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2016-03-14 19:00:42</sys_updated_on>
+    </sys_script_include>
+</record_update>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_definition">
+    <sys_ws_definition action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <base_uri>/api/x_snc_my_work/tracker</base_uri>
+        <consumes>application/json,application/xml,text/xml</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_version>No active default version</default_version>
+        <doc_link>https://morningstoryanddilbert.files.wordpress.com/2014/09/266-strip.gif</doc_link>
+        <enforce_acl/>
+        <is_versioned>true</is_versioned>
+        <name>Task tracker API</name>
+        <namespace>x_snc_my_work</namespace>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <service_id>tracker</service_id>
+        <short_description>User task tracking</short_description>
+        <sys_class_name>sys_ws_definition</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2016-03-13 15:14:37</sys_created_on>
+        <sys_id>fc1aa14b4f0a12002fa02f1e0210c72a</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>Task tracker API</sys_name>
+        <sys_package display_value="My Work" source="x_snc_my_work">11e9a50b4f0a12002fa02f1e0210c737</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="My Work">11e9a50b4f0a12002fa02f1e0210c737</sys_scope>
+        <sys_update_name>sys_ws_definition_fc1aa14b4f0a12002fa02f1e0210c72a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2016-03-14 18:58:05</sys_updated_on>
+    </sys_ws_definition>
+</record_update>
